@@ -3,7 +3,14 @@
     <div id="nav">
       <router-link to="/">Home</router-link>
       |
-      <router-link to="/about">About</router-link>
+      <router-link to="/signup">Signup</router-link>
+      |
+      <router-link to="/login">Log in</router-link>
+      |
+      <router-link to="/logout">Log out</router-link>
+      |
+      <router-link to="/productsNew">New Products</router-link>
+      |
     </div>
     <router-view />
   </div>
@@ -31,3 +38,21 @@
   color: #42b983;
 }
 </style>
+
+<script>
+export default {
+  methods: {
+    getUserId: function() {
+      return localStorage.getItem("user.id");
+    },
+  },
+  isLoggedIn: function() {
+    if (localStorage.getItem("jwt")) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  // here goes is Admin when its fixed **rememeber to add ${} to interpolate also call with $parent.
+};
+</script>
