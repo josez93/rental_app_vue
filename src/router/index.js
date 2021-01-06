@@ -7,7 +7,7 @@ import Logout from "../views/Logout.vue";
 import ProductsNew from "../views/ProductsNew.vue";
 import ProductsShow from "../views/ProductsShow.vue";
 import ProductsEdit from "../views/ProductsEdit.vue";
-import CreateOrder from "../views/CreateOrder.vue";
+import CartedProducts from "../views/CartedProducts.vue";
 
 Vue.use(VueRouter);
 
@@ -56,9 +56,9 @@ const routes = [
     component: ProductsEdit,
   },
   {
-    path: "/ordersnew",
-    name: "order-new",
-    component: CreateOrder,
+    path: "/carted_products",
+    name: "carted-products",
+    component: CartedProducts,
   },
 ];
 

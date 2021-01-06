@@ -16,7 +16,7 @@
         Quantity:
         <input type="text" v-model="newquantity" />
       </form>
-      <button v-on:click="createOrder()">Make a Order</button>
+      <button v-on:click="addCart()">Add to Cart</button>
     </div>
     <!-- is Admin Section -->
     <div>
@@ -74,6 +74,22 @@ export default {
         .then(response => {
           console.log("order created", response.data);
           this.$router.push("/");
+        })
+        .catch(error => {
+          console.log("order error", error.response);
+          this.error = error.response.data.errors;
+        });
+    },
+    addCart: function() {
+      var params = {
+        quantity: this.newquantity,
+        product_id: this.product.id,
+      };
+      axios
+        .post("/api/carted_products", params)
+        .then(response => {
+          console.log("added to cart", response.data);
+          this.$router.push("/carted_products");
         })
         .catch(error => {
           console.log("order error", error.response);
