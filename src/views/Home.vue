@@ -5,7 +5,6 @@
       <img v-bind:src="`${product.image_url}`" alt="" />
       <h1>{{ product.name }}</h1>
       <h2>{{ product.price }}</h2>
-      <h3>inventory {{ product.inventory }}</h3>
       <router-link v-bind:to="`/products/${product.id}`">More details</router-link>
     </div>
   </div>

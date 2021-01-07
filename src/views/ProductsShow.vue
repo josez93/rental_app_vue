@@ -1,5 +1,3 @@
-<!--make sure to comeback and check if this is still working once you add the images to each product -->
-
 <template>
   <div class="Products-show">
     <div>
@@ -13,11 +11,23 @@
         <ul>
           <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
         </ul>
+        date
+        <datetime v-model="date"></datetime>
+        <p>{{ this.formattedDate }}</p>
+
+        <div v-if="this.remainingInventory !== -1">
+          <p>{{ this.remainingInventory }} {{ this.product.name }}'s available on this day</p>
+        </div>
+        <button v-on:click.prevent="inventoryBooked">check availability</button>
         Quantity:
         <input type="text" v-model="newquantity" />
       </form>
       <button v-on:click="addCart()">Add to Cart</button>
     </div>
+    <!-- <div>
+      Date
+      <datetime v-model="date" v-on:click="setDate(date)"></datetime>
+    </div> -->
     <!-- is Admin Section -->
     <div>
       <button v-on:click="destroyProduct(product)">Destroy product</button>
@@ -31,7 +41,8 @@
 
 <script>
 import axios from "axios";
-
+import { Datetime } from "vue-datetime";
+import moment from "moment";
 export default {
   data: function() {
     return {
@@ -41,7 +52,17 @@ export default {
       order: {},
       errors: [],
       error: [],
+      datetime: Datetime,
+      date: "",
+      formattedDate: "",
+      bookedTotal: 0,
+      remainingInventory: -1,
     };
+  },
+  watch: {
+    date: function() {
+      this.formattedDate = moment(this.date).format("YYYY-MM-DD");
+    },
   },
   created: function() {
     axios.get("/api/products/" + this.$route.params.id).then(response => {
@@ -84,6 +105,7 @@ export default {
       var params = {
         quantity: this.newquantity,
         product_id: this.product.id,
+        booking_date: this.booking_date,
       };
       axios
         .post("/api/carted_products", params)
@@ -96,6 +118,36 @@ export default {
           this.error = error.response.data.errors;
         });
     },
+    inventoryBooked: function() {
+      // var params = {
+      //   product_id: this.product.id,
+      //   booking_date: this.formattedDate,
+      // };
+      axios
+        .get("api/products_inventory/", {
+          params: {
+            product_id: this.product.id,
+            booking_date: this.formattedDate,
+          },
+        })
+        .then(response => {
+          console.log(response.data);
+          this.bookedTotal = response.data.total;
+          this.remainingInventory = parseInt(this.product.inventory) - parseInt(this.bookedTotal);
+          console.log(this.product.inventory);
+          console.log(this.bookedTotal);
+          console.log(this.remainingInventory);
+        })
+        .catch(error => {
+          console.log("order error", error.response);
+          this.error = error.response.data.errors;
+        });
+    },
+    // setDate: function() {
+    //   var params = {
+    //     booking_date: this.booking_date
+    //   };
+    // }
   },
 };
 </script>
