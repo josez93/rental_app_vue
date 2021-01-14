@@ -1,48 +1,54 @@
 <template>
-  <div class="Products-show">
+  <div class="Products-show custom-col-3">
     <div>
-      <h2>{{ product.name }}</h2>
+      <h1>{{ product.name }}</h1>
       <img v-bind:src="`${product.image_url}`" :alt="product.id" />
-
-      <router-link to="/">Back to all products</router-link>
     </div>
-    <div>
-      <form v-on:summit="createOrder()">
-        <ul>
-          <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
-        </ul>
-        date
-        <datetime v-model="date"></datetime>
-        <p>{{ this.formattedDate }}</p>
 
-        <div v-if="this.remainingInventory !== -1">
-          <p>{{ this.remainingInventory }} {{ this.product.name }}'s available on this day</p>
+    <div>
+      <div class="col-lg-10 col-md-20">
+        <div class="contact-form">
+          <form v-on:summit="createOrder()">
+            <ul>
+              <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
+            </ul>
+            date
+            <datetime zone="local" value-zone="local" type="date" v-model="date"></datetime>
+
+            <div v-if="this.remainingInventory !== -1">
+              <p>{{ this.remainingInventory }} {{ this.product.name }}'s available on this day</p>
+            </div>
+            <button v-on:click.prevent="inventoryBooked">check availability</button>
+            <div>
+              Quantity:
+              <input type="text" v-model="newquantity" />
+            </div>
+          </form>
         </div>
-        <button v-on:click.prevent="inventoryBooked">check availability</button>
-        Quantity:
-        <input type="text" v-model="newquantity" />
-      </form>
+      </div>
       <button v-on:click="addCart()">Add to Cart</button>
     </div>
     <!-- <div>
       Date
       <datetime v-model="date" v-on:click="setDate(date)"></datetime>
     </div> -->
-    <!-- is Admin Section -->
+    <!-- is Admin Section v-if="isAdmin()" -->
     <div>
       <button v-on:click="destroyProduct(product)">Destroy product</button>
-      <ul v-if="isAdmin()">
+      <ul>
         <router-link :to="`/products/${product.id}/edit`">edit</router-link>
       </ul>
     </div>
+    <router-link to="/">Back to all products</router-link>
   </div>
+
   <!-- end of is admin section -->
 </template>
 
 <script>
 import axios from "axios";
 import { Datetime } from "vue-datetime";
-import moment from "moment";
+// import moment from "moment";
 export default {
   data: function() {
     return {
@@ -61,7 +67,8 @@ export default {
   },
   watch: {
     date: function() {
-      this.formattedDate = moment(this.date).format("YYYY-MM-DD");
+      this.formattedDate = this.date.slice(0, 10);
+      // this.formattedDate = moment(this.date).format("YYYY-MM-DD");
     },
   },
   created: function() {
@@ -78,17 +85,19 @@ export default {
       });
     },
     // isAdmin still doesnt work
-    isAdmin: function() {
-      if (localStorage.getItem("user_admin")) {
-        return true;
-      } else {
-        return false;
-      }
-    },
+
+    // isAdmin: function() {
+    //   if (localStorage.getItem("user_admin")) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
     createOrder: function() {
       var params = {
         quantity: this.newquantity,
         product_id: this.product.id,
+        booking_date: this.booking_date,
       };
       axios
         .post("/api/orders", params)
@@ -105,7 +114,7 @@ export default {
       var params = {
         quantity: this.newquantity,
         product_id: this.product.id,
-        booking_date: this.booking_date,
+        booking_date: this.formattedDate,
       };
       axios
         .post("/api/carted_products", params)

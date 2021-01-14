@@ -1,43 +1,54 @@
 <template>
   <div class="signup">
-    <form v-on:submit.prevent="submit()">
-      <h1>Signup</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
-      </ul>
-      <div class="form-group">
-        <label>First Name:</label>
-        <input type="text" class="form-control" v-model="first_name" />
+    <div class="col-lg-5 col-md-10">
+      <div class="contact-form">
+        <form class="contact-form-style" v-on:submit.prevent="submit()">
+          <h1>
+            <strong></strong>
+            Signup
+          </h1>
+          <ul>
+            <li class="text-danger" v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
+          </ul>
+          <div class="form-group">
+            <label><strong>First Name:</strong></label>
+            <input type="text" class="form-control" v-model="first_name" />
+          </div>
+          <div class="form-group">
+            <label><strong>Last Name:</strong></label>
+            <input type="text" class="form-control" v-model="last_name" />
+          </div>
+          <div class="form-group">
+            <label><strong>Street Address:</strong></label>
+            <input type="text" class="form-control" v-model="street_address" />
+          </div>
+          <div class="form-group">
+            <label>
+              <strong>Phone Number</strong>
+              :
+            </label>
+            <input type="text" class="form-control" v-model="phone_number" />
+          </div>
+          <div class="form-group">
+            <label><strong>Email:</strong></label>
+            <input type="email" class="form-control" v-model="email" />
+          </div>
+          <div class="form-group">
+            <label><strong>Password:</strong></label>
+            <input type="password" class="form-control" v-model="password" />
+          </div>
+          <div class="form-group">
+            <label><strong>Password confirmation:</strong></label>
+            <input type="password" class="form-control" v-model="passwordConfirmation" />
+            <small v-if="password !== passwordConfirmation" class="text-danger">
+              Must match password
+            </small>
+          </div>
+          <input type="submit" class="btn btn-primary" value="Submit" />
+        </form>
       </div>
-      <div class="form-group">
-        <label>Last Name:</label>
-        <input type="text" class="form-control" v-model="last_name" />
-      </div>
-      <div class="form-group">
-        <label>Street Address:</label>
-        <input type="text" class="form-control" v-model="street_address" />
-      </div>
-      <div class="form-group">
-        <label>Phone Number:</label>
-        <input type="text" class="form-control" v-model="phone_number" />
-      </div>
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" class="form-control" v-model="email" />
-      </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" class="form-control" v-model="password" />
-      </div>
-      <div class="form-group">
-        <label>Password confirmation:</label>
-        <input type="password" class="form-control" v-model="passwordConfirmation" />
-        <small v-if="password !== passwordConfirmation" class="text-danger">
-          Must match password
-        </small>
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
+      <p class="form-messege"></p>
+    </div>
   </div>
 </template>
 
